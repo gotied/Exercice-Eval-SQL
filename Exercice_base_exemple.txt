@@ -1,0 +1,184 @@
+// Exercice 1 sql (SELECT) // Base exemple
+
+1 : 
+SELECT * FROM employe;
+
+2 : 
+SELECT * FROM dept;
+
+3 : 
+SELECT nom, dateemb, nosup, nodep, salaire FROM employe;
+
+4 : 
+SELECT DISTINCT nom, titre FROM employe;
+
+5 : 
+SELECT DISTINCT nom, nosup, titre FROM employe;
+
+6 : 
+SELECT nom, noemp, nodep FROM employe WHERE titre = 'secrétaire';
+
+7 : 
+SELECT nom, nodep FROM employe WHERE nodep > 40;
+
+8 : 
+SELECT nom, prenom FROM employe ORDER BY employe.nom ASC;
+
+9 : 
+SELECT nom, salaire, nodep FROM employe WHERE titre = 'représentant' AND nodep = 35 AND salaire > 20000;
+
+10 : 
+SELECT nom, titre, nodep FROM employe WHERE titre = 'représentant' OR titre = 'président';
+
+11 : 
+SELECT nom, titre, nodep, salaire FROM employe WHERE titre = 'représentant' AND nodep = 34 OR titre = 'secrétaire' AND nodep = 34; 
+
+12 : 
+
+
+13 : 
+SELECT nom, salaire FROM employe WHERE salaire BETWEEN 20000 AND 30000;
+
+14 : 
+SELECT nom FROM employe WHERE nom LIKE 'h%';
+
+15 : 
+SELECT nom FROM employe WHERE nom LIKE '%n';
+
+16 : 
+SELECT nom FROM employe WHERE nom LIKE '__u%';
+
+17 : 
+SELECT salaire, nom FROM employe WHERE nodep = 41 ORDER BY salaire ASC;
+
+18 :
+SELECT salaire, nom FROM employe WHERE nodep = 41 ORDER BY salaire DESC;
+
+19 : 
+SELECT titre, salaire, nom FROM employe ORDER BY titre ASC, salaire DESC;
+
+20 : 
+SELECT tauxcom , salaire, nom FROM employe WHERE tauxcom IS NOT NULL ORDER BY tauxcom ASC;
+
+21 : 
+SELECT nom, salaire, tauxcom FROM employe WHERE tauxcom IS NULL;
+
+22 : 
+SELECT nom, salaire, tauxcom FROM employe WHERE tauxcom IS NOT NULL;
+
+23 : 
+SELECT nom, salaire, tauxcom FROM employe WHERE tauxcom IS NOT NULL AND tauxcom < 15;
+
+24 : 
+SELECT nom, salaire, tauxcom FROM employe WHERE tauxcom IS NOT NULL AND tauxcom > 15;
+
+25 : 
+SELECT nom, salaire, tauxcom, salaire * tauxcom AS commission FROM employe WHERE tauxcom IS NOT NULL;
+
+26 :
+SELECT nom, salaire, tauxcom, salaire * tauxcom AS commission FROM employe WHERE tauxcom IS NOT NULL ORDER BY commission ASC;
+
+27 : 
+SELECT CONCAT(nom, ' ', prenom) AS "nom prénom" FROM employe;
+
+28 : 
+SELECT SUBSTRING(nom, 1, 5) AS "les 5 premières lettres" FROM employe;
+
+29 : 
+SELECT nom, LOCATE('r', nom) AS "rang lettre r" FROM employe;
+
+30 : 
+SELECT nom, UPPER(nom) AS majuscule, LOWER(nom) AS minuscule FROM employe WHERE nom = 'vrante';
+
+31 : 
+SELECT nom, LENGTH(nom) AS "nombre de caractère" FROM employe;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+// Exercice 2 sql (SELECT/JOIN) // Base exemple 
+
+1 :
+SELECT prenom, noregion FROM employe JOIN dept WHERE nodep = nodept;
+
+2 :
+SELECT nodept, dept.nom, employe.nom AS 'nom employé' FROM dept JOIN employe WHERE nodept = nodep ORDER BY nodept;
+
+3 : 
+SELECT employe.nom FROM employe JOIN dept WHERE nodep = nodept AND dept.nom = 'distribution';
+
+4 : 
+SELECT employe.nom AS 'employé nom', employe.salaire AS 'employé salaire', patron.nom AS 'supérieur nom', patron.salaire AS 'supérieur salaire' FROM employe employe JOIN employe patron ON employe.nosup = patron.noemp WHERE employe.salaire > patron.salaire;
+
+5 : 
+SELECT nom, titre FROM employe WHERE titre = (SELECT titre FROM employe WHERE nom = 'amartakaldire');
+
+6 : 
+SELECT employe.nom, employe.salaire, employe.nodep FROM employe employe WHERE employe.salaire > (SELECT MIN(salaire) FROM employe WHERE nodep = 31) ORDER BY employe.nodep, employe.salaire;
+
+7 : 
+SELECT employe.nom, employe.salaire, employe.nodep FROM employe employe WHERE employe.salaire > (SELECT MAX(salaire) FROM employe WHERE nodep = 31) ORDER BY employe.nodep, employe.salaire;
+
+8 : 
+SELECT employe.nom, employe.titre FROM employe employe WHERE employe.nodep = 31 AND employe.titre IN ( SELECT DISTINCT titre FROM employe WHERE nodep = 32 );
+
+9 : 
+SELECT employe.nom, employe.titre FROM employe WHERE employe.nodep = 31 AND employe.titre NOT IN (SELECT titre FROM employe WHERE nodep = 32);
+
+10 :
+SELECT nom, titre, salaire FROM employe WHERE (titre, salaire) = ( SELECT titre, salaire FROM employe WHERE nom = 'fairent' );
+
+11 : 
+SELECT dept.nodept AS 'numéro du département', dept.nom AS 'nom du département', employe.nom AS "nom de l'employé" FROM dept LEFT JOIN employe ON dept.nodept = employe.nodep ORDER BY dept.nodept;
+
+12 : 
+SELECT titre, COUNT(*) AS "nombre d'employés par titre" FROM employe GROUP BY titre;
+
+13 :
+SELECT nodep, AVG(salaire) AS 'moyenne salaire', SUM(salaire) AS 'somme salaire' FROM employe GROUP BY nodep;
+
+14 : 
+SELECT nodep FROM employe GROUP BY nodep HAVING COUNT(*) >= 3;
+
+15 : 
+SELECT SUBSTR(nom, 1, 1) AS initiale FROM employe GROUP BY initiale HAVING COUNT(*) >= 3;
+
+16 : 
+SELECT MAX(salaire) AS 'salaire max', MIN(salaire) AS 'salaire min', MAX(salaire) - MIN(salaire) AS 'écart salaire' FROM employe;
+
+17 : 
+SELECT COUNT(DISTINCT titre) AS 'nombre de titres différents' FROM employe;
+
+18 : 
+SELECT titre, COUNT(*) AS "nombre d'employés par titre" FROM employe GROUP BY titre;
+
+19 : 
+SELECT dept.nom, COUNT(employe.noemp) AS "nombre d'employés par département" FROM employe JOIN dept ON employe.nodep = dept.nodept GROUP BY dept.nom;
+
+20 :
+SELECT titre, AVG(salaire) AS 'moyenne salaire' FROM employe GROUP BY titre HAVING AVG(salaire) > (SELECT AVG(salaire) FROM employe WHERE titre = 'représentant');
+
+21 : 
+SELECT COUNT(salaire) AS 'nombre de salaires', COUNT(tauxcom) AS 'nombre de taux de commission' FROM employe;
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+// Exercice 3 sql (INSERT/UPDATE/DELETE) // Base exemple 
+
+1 : 
+INSERT INTO employe (noemp, nom, prenom, dateemb, nosup, titre, nodep, salaire) 
+VALUES (26, 'bon', 'jean', '2001-03-11 00:00:00', 6, 'stagiaire', 60, 0),
+(27, 'pasbon', 'jean', '2001-03-11 00:00:00', 8, 'stagiaire', 60, 0),
+(28, 'trèsbon', 'jean', '2001-03-11 00:00:00', 10, 'stagiaire', 60, 0);
+
+2 : 
+INSERT INTO dept (nodept, nom, noregion) 
+VALUES (60, 'fait le café', 1); 
+
+3 : 
+UPDATE employe SET salaire = salaire * 1.1 WHERE noemp = 17;
+
+4 : 
+UPDATE dept SET nom = 'logistique' WHERE nodept = 45; 
+
+5 :
+DELETE FROM employe WHERE noemp = 28;
