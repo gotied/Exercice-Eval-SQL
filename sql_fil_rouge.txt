@@ -1,0 +1,43 @@
+// exercice fil rouge //
+
+1 : 
+SELECT * FROM commande
+
+2 : 
+SELECT DISTINCT plat.* FROM plat JOIN categorie ON plat.id_categorie = categorie.id WHERE plat.id_categorie = ?;
+
+3 : 
+SELECT * FROM categorie;
+/
+SELECT * FROM plat JOIN categorie ON plat.id_categorie = categorie.id;
+
+4 : 
+SELECT COUNT(*) AS nbr_vente, plat.libelle, plat.image, plat.id 
+    FROM commande 
+    JOIN plat ON plat.id = commande.id_plat 
+    WHERE commande.etat = 'livrée'
+    GROUP BY plat.libelle 
+    ORDER BY nbr_vente 
+    DESC LIMIT 3;
+
+5 : 
+SELECT plat.libelle, (COUNT(*)*plat.prix) AS total_p FROM commande JOIN plat ON plat.id = commande.id_plat GROUP BY plat.libelle ORDER BY total_p DESC
+
+6 : 
+SELECT nom_client, email_client, total FROM commande WHERE etat = "Livrée" GROUP BY email_client ORDER BY total DESC
+
+7 : 
+if($plat->active == 'No') 
+DELETE FROM plat WHERE id = ? AND id IN (SELECT id_plat FROM commande);
+
+8 : 
+if($commande->etat == 'Livrée')
+DELETE FROM commande WHERE id = ?;
+
+9 : 
+INSERT INTO categorie (libelle, image, active) VALUES (:libelle, :image, :active);
+/
+INSERT INTO plat (libelle, description, prix, image, id_categorie, active) VALUES (:libelle, :description, :prix, :image, :id_categorie, :active);
+
+10 : 
+UPDATE plat SET prix = prix * (1 + :pourcentage/100) WHERE id_categorie = :id_categorie;
